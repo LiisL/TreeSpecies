@@ -1,0 +1,25 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# IDE
+.idea/
+.vscode/
+
+# Large data / model / output directories — tracked on disk, not in git.
+# Code subfolders of archive/ (scripts, notebooks) ARE tracked; only its
+# data dump is excluded below.
+/data/*
+!/data/external/
+/data/external/*
+!/data/external/README.md
+/models/
+/outputs/
+/archive/data/
+
+# Thesis Word checkpoint backups (working snapshots, not part of the clean repo)
+*.docx.bak
