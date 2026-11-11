@@ -221,9 +221,9 @@ def main():
     if gdf.crs is None:
         raise RuntimeError("Input file has no CRS.")
 
-    # WGS84 for Sentinel Hub Geometry
-    if gdf.crs != "EPSG:4326":
-        gdf = gdf.to_crs(4326)
+    # L-EST97 (EPSG:3301) for Sentinel Hub Geometry: resolution=(10, 10) is in CRS units (metres here, degrees in WGS84)
+    if gdf.crs != "EPSG:3301":
+        gdf = gdf.to_crs(3301)
 
     print("CRS after reprojection:", gdf.crs)
     print("Bounds after reprojection:", gdf.total_bounds)
@@ -262,7 +262,7 @@ def main():
             continue
 
         try:
-            geom = Geometry(row["geometry"], CRS.WGS84)
+            geom = Geometry(row["geometry"], CRS(3301))
 
             data, config = request_with_retry(
                 row_id, geom, config,

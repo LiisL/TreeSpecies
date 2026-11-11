@@ -211,7 +211,7 @@ def download_split(gdf_all, split, config):
             continue
 
         try:
-            geom = Geometry(row["geometry"], CRS.WGS84)
+            geom = Geometry(row["geometry"], CRS(3301))
             data, config = request_with_retry(
                 row_id, geom, config, EVALSCRIPT, (START, END), AGGREGATION_INTERVAL, CDSE_S2L2A,
                 refresh_config_fn=lambda: get_config(DIRECT_CLIENT_ID, DIRECT_CLIENT_SECRET, SH_BASE_URL, SH_TOKEN_URL),
@@ -270,8 +270,8 @@ def main():
 
     if gdf.crs is None:
         raise RuntimeError("Input file has no CRS.")
-    if gdf.crs != "EPSG:4326":
-        gdf = gdf.to_crs(4326)
+    if gdf.crs != "EPSG:3301":
+        gdf = gdf.to_crs(3301)
     print("CRS after reprojection:", gdf.crs)
 
     config = get_config(DIRECT_CLIENT_ID, DIRECT_CLIENT_SECRET, SH_BASE_URL, SH_TOKEN_URL)

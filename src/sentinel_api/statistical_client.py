@@ -47,6 +47,16 @@ def apply_filters(gdf, subregion, split, subregion_col="subregion", split_col="d
 
 def make_request(geom, config, evalscript, time_range, aggregation_interval, data_collection,
                   maxcc=0.3, resolution=(10, 10)):
+    """`resolution` is in the units of `geom.crs`. With a geographic CRS
+    (WGS84) (10, 10) would mean 10 x 10 DEGREES, so every parcel statistic
+    would be a single coarse sample instead of a mean over its 10 m pixels.
+    Geometries must therefore be in a projected metre CRS - EPSG:3301
+    (L-EST97) for Estonia."""
+    if geom.crs.pyproj_crs().is_geographic:
+        raise ValueError(
+            f"Statistical API geometry is in geographic CRS {geom.crs}; resolution={resolution} "
+            "would be in degrees. Reproject the parcels to EPSG:3301 (CRS(3301)) first."
+        )
     start, end = time_range
 
     return SentinelHubStatistical(

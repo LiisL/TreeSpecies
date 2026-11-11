@@ -161,9 +161,9 @@ def main():
 
     print("Total objects:", len(gdf))
 
-    # Reproject to WGS84 for the API
-    if gdf.crs != "EPSG:4326":
-        gdf = gdf.to_crs(4326)
+    # Reproject to L-EST97 (EPSG:3301): resolution=(10, 10) is in the geometry CRS units, so it must be metres, not degrees
+    if gdf.crs != "EPSG:3301":
+        gdf = gdf.to_crs(3301)
 
     print("CRS after reprojection:", gdf.crs)
     print("Bounds after reprojection:", gdf.total_bounds)
@@ -180,7 +180,7 @@ def main():
         row = row._asdict()
         row_id = row["id"]
 
-        geom = Geometry(row["geometry"], CRS.WGS84)
+        geom = Geometry(row["geometry"], CRS(3301))
         data, config = request_with_retry(
             row_id, geom, config,
             EVALSCRIPT, (START, END), "P10D", CDSE_S2L2A,
